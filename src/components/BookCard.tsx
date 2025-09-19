@@ -10,11 +10,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star } from "lucide-react";
+import { StarRating } from "@/components/StarRating";
 
 export function BookCard({ book }: { book: Book }) {
   return (
-    <Card className="flex flex-col overflow-hidden h-full">
+    <Card className="flex flex-col overflow-hidden h-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg">
       <CardHeader className="p-0">
         <Link href={`/library/${book.id}`}>
           <div className="relative h-64 w-full">
@@ -33,18 +33,7 @@ export function BookCard({ book }: { book: Book }) {
         </CardTitle>
         <p className="text-sm text-muted-foreground">{book.author}</p>
         <p className="text-sm text-muted-foreground">{book.year}</p>
-        <div className="flex items-center gap-1">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              className={`h-4 w-4 ${
-                book.rating && index < book.rating
-                  ? "text-yellow-500 fill-yellow-500"
-                  : "text-gray-300"
-              }`}
-            />
-          ))}
-        </div>
+        <StarRating rating={book.rating} className="mt-3" />
         <div className="pt-4">
           {book.genre && <Badge variant="outline">{book.genre}</Badge>}
         </div>

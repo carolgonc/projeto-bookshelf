@@ -1,5 +1,5 @@
 import { initialBooks } from "@/data/initialBooks";
-import { BookCard } from "@/components/ui/BookCard";
+import { BookCard } from "@/components/BookCard";
 
 export default function LibraryPage() {
   return (
