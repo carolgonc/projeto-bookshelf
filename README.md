@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📚 BookShelf
 
-## Getting Started
+BookShelf é uma aplicação web moderna para gerenciamento de biblioteca pessoal.
+Permite cadastrar, organizar e acompanhar a leitura dos seus livros, com estatísticas em tempo real e uma interface elegante.
 
-First, run the development server:
+🚀 Tecnologias
 
-```bash
+Next.js 15
+ (App Router)
+
+React 19
+ + TypeScript
+
+Tailwind CSS
+ + shadcn/ui
+
+🛠️ Como começar
+
+Clone o repositório e instale as dependências:
+
+git clone https://github.com/seu-usuario/bookshelf.git
+cd bookshelf
+npm install
+
+
+Execute o servidor de desenvolvimento:
+
 npm run dev
-# or
+# ou
 yarn dev
-# or
+# ou
 pnpm dev
-# or
+# ou
 bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Abra http://localhost:3000
+ no navegador para ver a aplicação em funcionamento.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+✨ Funcionalidades
 
-## Learn More
+Dashboard com estatísticas gerais da biblioteca
 
-To learn more about Next.js, take a look at the following resources:
+Listagem de livros com busca e filtros por gênero
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Adicionar/editar livros com preview da capa e validação em tempo real
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Gerenciar progresso de leitura (Quero Ler, Lendo, Lido, Pausado, Abandonado)
 
-## Deploy on Vercel
+Excluir livros com confirmação de segurança
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+📖 Estrutura do Livro
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Cada livro contém:
+id, title, author, genre, year, pages, rating, synopsis, cover e status.
+
+🚀 Deploy
+
+A forma mais simples de publicar o projeto é usando a plataforma Vercel
+, criadora do Next.js.
+
+📌 Melhorias Futuras
+
+Integração com APIs externas para buscar capas e sinopses.
+
+Modo escuro (dark mode).
+
+Exportar biblioteca em PDF ou Excel.
