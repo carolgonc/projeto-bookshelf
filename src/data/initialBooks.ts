@@ -52,7 +52,7 @@ export const initialBooks: Book[] = [
         author: "Rebecca Yarros",
         year: 2024,
         genre: "Romance",
-        cover: "https://m.media-amazon.com/images/I/916c3LpFtkL.jpg",
+        cover: "https://m.media-amazon.com/images/I/8148ztBU3BL.jpg",
         pages: 432,
         status: "LIDO",
         synopsis: "Tudo Que Deixamos Inacabado de Rebecca Yarros é um romance que entrelaça duas histórias de amor paralelas, uma no presente e outra no passado, focando em Georgia, que após um divórcio traumático precisa concluir o último manuscrito de sua bisavó, a escritora Scarlett. Georgia é forçada a trabalhar com o autor best-seller Noah Harrison, que deve finalizar a obra de Scarlett, e juntos eles descobrem os segredos de um amor intenso que aconteceu durante a Segunda Guerra Mundial, abordando temas como perdas, segundas chances e a complexidade dos finais.",

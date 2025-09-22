@@ -14,14 +14,15 @@ import { StarRating } from "@/components/StarRating";
 
 export function BookCard({ book }: { book: Book }) {
   return (
-    <Card className="flex flex-col overflow-hidden h-full bg-white/20 backdrop-blur-lg border border-white/30 shadow-lg">
-      <CardHeader className="p-0">
+    <Card className="flex flex-col overflow-hidden h-full bg-white/20 backdrop-blur-lg border lg:p-6 border-white/30 shadow-lg">
+      <CardHeader className="w-full">
         <Link href={`/library/${book.id}`}>
           <div className="relative h-64 w-full">
             <Image
               src={book.cover || "/fallback.png"}
               alt="{`Capa de ${book.title}`}"
               fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover"
             />
           </div>
