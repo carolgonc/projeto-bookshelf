@@ -1,43 +1,37 @@
-import { initialBooks } from "@/data/initialBooks";
-import Image from "next/image";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { StarRating } from "@/components/StarRating";
+import { DeleteBooks } from '@/components/DeleteBooks'
+import { SelectBookStatus } from '@/components/SelectBookStatus'
+import { StarRating } from '@/components/StarRating'
+import { Badge } from '@/components/ui/badge'
+import { books } from '@/data/initialBooks'
+import { ReadStatusLabel } from '@/types/book'
+import Image from 'next/image'
 
 export default function BookDetailPage({ params }: { params: { id: string } }) {
-  const book = initialBooks.find((b) => b.id === params.id);
+  const book = books.find((b) => b.id.toString() === params.id)
 
   if (!book) {
     return (
       <main className="container p-4 md:p-6 text-center">
         <h1 className="text-2xl font-bold">Livro não encontrado! :(</h1>
       </main>
-    );
+    )
   }
 
   return (
     <main className="container p-4 md:p-6">
       <div className="grid md:grid-cols-3 gap-8 items-start">
         <div className="md:col-span-1 flex flex-col gap-4">
-          <div className="relative w-full" style={{ aspectRatio: "2 / 3" }}>
+          <div className="relative w-full" style={{ aspectRatio: '2 / 3' }}>
             <Image
-              src={book.cover || "/fallback.png"}
+              src={book.cover || '/fallback.png'}
               alt={`Capa de ${book.title}`}
               fill
               className="rounded-lg shadow-lg object-cover"
             />
           </div>
           <div className="flex gap-2 sm:flex-col">
-            <Button asChild className="w-full">
-              <Link href={`/library/${book.id}/edit`}>Editar</Link>
-            </Button>
-            <Button
-              variant="destructive"
-              className="w-full cursor-pointer hover:bg-red-700"
-            >
-              Excluir
-            </Button>
+            <SelectBookStatus bookId={book.id} initialStatus={book.status} />
+            <DeleteBooks bookId={book.id} bookTitle={book.title} />
           </div>
         </div>
         <div className="md:col-span-2">
@@ -54,12 +48,14 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
             </div>
             <div>
               <h3 className="text-lg font-semibold">Status da Leitura</h3>
-              <p className="text-muted-foreground">{book.status}</p>
+              <p className="text-muted-foreground">
+                {book.status && ReadStatusLabel[book.status]}
+              </p>
             </div>
             <div>
               <h3 className="text-lg font-semibold">Total de páginas</h3>
               <p className="text-muted-foreground">
-                {book.pages || "Não informado"}
+                {book.pages || 'Não informado'}
               </p>
             </div>
             <div>
@@ -70,5 +66,5 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
         </div>
       </div>
     </main>
-  );
+  )
 }
