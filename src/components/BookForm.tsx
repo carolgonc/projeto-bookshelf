@@ -1,45 +1,53 @@
-"use client";
+'use client'
 
-import { useActionState, useEffect, useRef, useState } from "react";
-import { useFormStatus } from "react-dom";
-import { addBook, FormState } from "@/app/actions";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { useActionState, useEffect, useRef, useState } from 'react'
+import { useFormStatus } from 'react-dom'
+import { addBook, FormState } from '@/app/actions'
+import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "./ui/textarea";
-import Image from "next/image";
-
-const statuses = ["QUERO_LER", "LENDO", "LIDO", "ABANDONADO"];
+} from '@/components/ui/select'
+import { Textarea } from './ui/textarea'
+import Image from 'next/image'
+import { ReadStatus, ReadStatusLabel } from '@/types/book'
+import { toast } from 'sonner'
 
 function SubmitButton() {
-  const { pending } = useFormStatus();
+  const { pending } = useFormStatus()
 
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Salvando..." : "Salvar Livro"}
+      {pending ? 'Salvando...' : 'Salvar Livro'}
     </Button>
-  );
+  )
 }
 
 export function BookForm() {
-  const initialState: FormState = { message: "", success: false };
-  const [state, formAction] = useActionState(addBook, initialState);
-  const formRef = useRef<HTMLFormElement>(null);
-  const [coverPreview, setCoverPreview] = useState<string>("");
+  const initialState: FormState = { message: '', success: false }
+  const [state, formAction] = useActionState(addBook, initialState)
+  const formRef = useRef<HTMLFormElement>(null)
+  const [coverPreview, setCoverPreview] = useState<string>('')
 
   useEffect(() => {
     if (state.success) {
-      formRef.current?.reset();
-      setCoverPreview("");
+      formRef.current?.reset()
+      setCoverPreview('')
     }
-  }, [state]);
+  }, [state])
+
+  useEffect(() => {
+    if (state.success) {
+      toast.success(state.message)
+    } else {
+      toast.error(state.message)
+    }
+  }, [state])
 
   return (
     <form ref={formRef} action={formAction} className="space-y-6">
@@ -98,9 +106,9 @@ export function BookForm() {
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>
             <SelectContent>
-              {statuses.map((s) => (
+              {Object.values(ReadStatus).map((s) => (
                 <SelectItem key={s} value={s}>
-                  {s}
+                  {ReadStatusLabel[s]}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -135,7 +143,7 @@ export function BookForm() {
         {state.message && (
           <p
             className={`text-md ${
-              state.success ? "text-green-600" : "text-red-600"
+              state.success ? 'text-green-600' : 'text-red-600'
             }`}
           >
             {state.message}
@@ -143,5 +151,5 @@ export function BookForm() {
         )}
       </div>
     </form>
-  );
+  )
 }
