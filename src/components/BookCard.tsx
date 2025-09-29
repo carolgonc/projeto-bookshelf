@@ -35,7 +35,7 @@ export function BookCard({ book }: { book: Book }) {
         <p className="text-sm text-muted-foreground">{book.author}</p>
         <p className="text-sm text-muted-foreground">{book.year}</p>
         <StarRating rating={book.rating} className="mt-3" />
-        <div className="pt-4">
+        <div className="py-4">
           {book.genre && <Badge variant="outline">{book.genre}</Badge>}
         </div>
       </CardContent>
