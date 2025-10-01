@@ -112,7 +112,7 @@ export async function updateBook(
 
   redirect(`/library/${id}`)
 
-  // return {
+  // return
   //   message: 'Sucesso ao atualizar o livro' + books.toString(),
   //   success: true,
   // }
