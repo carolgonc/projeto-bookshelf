@@ -17,7 +17,7 @@ export const ReadStatusLabel: Record<ReadStatus, string> = {
 }
 
 export interface Book {
-  id: number
+  id: string
   title: string
   author: string
   genre?: string

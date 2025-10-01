@@ -1,13 +1,8 @@
 import { books } from '@/data/initialBooks'
-import { Button } from '@/components/ui/button'
 import { BookList } from '@/components/BookList'
-import Link from 'next/link'
 
 export default function LibraryPage() {
-  const booksCopy = books
   const allBooks = books
-
-  console.log(booksCopy)
 
   return (
     <main>

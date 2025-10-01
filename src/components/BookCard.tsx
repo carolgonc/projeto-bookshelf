@@ -11,7 +11,7 @@ import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { StarRating } from '@/components/StarRating'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, FilePenLine } from 'lucide-react'
 
 export function BookCard({ book }: { book: Book }) {
   return (
@@ -40,8 +40,13 @@ export function BookCard({ book }: { book: Book }) {
           {book.genre && <Badge variant="default">{book.genre}</Badge>}
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button asChild variant="default" className="rounded-4xl">
+      <CardFooter className="flex gap-2 justify-end">
+        <Button asChild variant="default" size="icon" className="rounded-4xl">
+          <Link href={`/library/${book.id}/edit`}>
+            <FilePenLine className="h-5 w-5" />
+          </Link>
+        </Button>
+        <Button asChild variant="default" size="icon" className="rounded-4xl">
           <Link href={`/library/${book.id}`}>
             <ArrowRight />
           </Link>

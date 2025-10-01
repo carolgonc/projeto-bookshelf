@@ -2,12 +2,20 @@ import { DeleteBooks } from '@/components/DeleteBooks'
 import { SelectBookStatus } from '@/components/SelectBookStatus'
 import { StarRating } from '@/components/StarRating'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { books } from '@/data/initialBooks'
 import { ReadStatusLabel } from '@/types/book'
+import { Pencil } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
-export default function BookDetailPage({ params }: { params: { id: string } }) {
-  const book = books.find((b) => b.id.toString() === params.id)
+export default async function BookDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = await params
+  const book = books.find((b) => b.id === id)
 
   if (!book) {
     return (
@@ -31,6 +39,11 @@ export default function BookDetailPage({ params }: { params: { id: string } }) {
           </div>
           <div className="flex gap-2 sm:flex-col">
             <SelectBookStatus bookId={book.id} initialStatus={book.status} />
+            <Button asChild className="w-full">
+              <Link href={`/library/${book.id}/edit`}>
+                <Pencil className="mr-2 h-4 w-4" />
+              </Link>
+            </Button>
             <DeleteBooks bookId={book.id} bookTitle={book.title} />
           </div>
         </div>

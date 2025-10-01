@@ -16,7 +16,7 @@ import {
 import { Trash } from 'lucide-react'
 
 interface DeleteBooksProps {
-  bookId: number
+  bookId: string
   bookTitle: string
 }
 
