@@ -112,8 +112,8 @@ export default function HomePage() {
             {genres.map((genre) => (
               <Link href={`/library?genero=${genre}`} key={genre}>
                 <Badge
-                  variant="secondary"
-                  className="hover:bg-primary hover:text-primary-foreground"
+                  variant="default"
+                  className="hover:bg-secondary hover:text-secondary-foreground"
                 >
                   {genre}
                 </Badge>
