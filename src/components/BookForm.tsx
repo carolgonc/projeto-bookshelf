@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
-import { addBook, FormState } from '@/app/actions'
+import { addBook, updateBook, FormState } from '@/app/actions'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { Label } from './ui/label'
@@ -15,8 +15,12 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from './ui/textarea'
 import Image from 'next/image'
-import { ReadStatus, ReadStatusLabel } from '@/types/book'
+import { Book, ReadStatus, ReadStatusLabel } from '@/types/book'
 import { toast } from 'sonner'
+
+interface BookFormProps {
+  initialData?: Book
+}
 
 function SubmitButton() {
   const { pending } = useFormStatus()
@@ -28,40 +32,73 @@ function SubmitButton() {
   )
 }
 
-export function BookForm() {
+export function BookForm({ initialData }: BookFormProps) {
+  // const initialState: FormState = { message: '', success: false }
+  // const [state, formAction] = useActionState(addBook, initialState)
+  // const formRef = useRef<HTMLFormElement>(null)
+  // const [coverPreview, setCoverPreview] = useState<string>('')
+  const isEditMode = Boolean(initialData)
+  const actionToUse = isEditMode ? updateBook : addBook
   const initialState: FormState = { message: '', success: false }
-  const [state, formAction] = useActionState(addBook, initialState)
+  const [state, formAction] = useActionState(actionToUse, initialState)
+
   const formRef = useRef<HTMLFormElement>(null)
-  const [coverPreview, setCoverPreview] = useState<string>('')
+  const [coverPreview, setCoverPreview] = useState<string>(
+    initialData?.cover || ''
+  )
 
   useEffect(() => {
-    if (state.success) {
-      formRef.current?.reset()
-      setCoverPreview('')
+    if (state) {
+      if (state.success) {
+        if (!isEditMode) {
+          formRef.current?.reset()
+          setCoverPreview('')
+        }
+      }
     }
-  }, [state])
+  }, [state, isEditMode])
+
+  // useEffect(() => {
+  //   if (state.success) {
+  //     formRef.current?.reset()
+  //     setCoverPreview('')
+  //   }
+  // }, [state])
 
   useEffect(() => {
-    if (state.success) {
-      toast.success(state.message)
-    } else {
-      toast.error(state.message)
+    if (state) {
+      if (state.success) {
+        toast.success(state.message)
+      } else if (state.errors) {
+        toast.error(state.message)
+      }
     }
   }, [state])
 
   return (
     <form ref={formRef} action={formAction} className="space-y-6">
+      {isEditMode && <input type="hidden" name="id" value={initialData?.id} />}
       <div>
         <Label htmlFor="title">Título *</Label>
-        <Input id="title" name="title" required />
-        {state.errors?.title && (
+        <Input
+          id="title"
+          name="title"
+          required
+          defaultValue={initialData?.title}
+        />
+        {state && state.errors?.title && (
           <p className="text-sm text-red-500 mt-1">{state.errors.title[0]}</p>
         )}
       </div>
       <div>
         <Label htmlFor="author">Autor *</Label>
-        <Input id="author" name="author" required />
-        {state.errors?.author && (
+        <Input
+          id="author"
+          name="author"
+          required
+          defaultValue={initialData?.author}
+        />
+        {state && state.errors?.author && (
           <p className="text-sm text-red-500 mt-1">{state.errors.author[0]}</p>
         )}
       </div>
@@ -70,12 +107,12 @@ export function BookForm() {
         <Input
           id="cover"
           name="cover"
+          defaultValue={initialData?.cover}
           onChange={(e) => setCoverPreview(e.target.value)}
-        >
-          {state.errors?.cover && (
-            <p className="text-sm text-red-500">{state.errors.cover[0]}</p>
-          )}
-        </Input>
+        />
+        {state && state.errors?.cover && (
+          <p className="text-sm text-red-500">{state.errors.cover[0]}</p>
+        )}
       </div>
       {coverPreview && (
         <div>
@@ -96,12 +133,14 @@ export function BookForm() {
           <Input
             id="genre"
             name="genre"
-            placeholder="Ex: Romance, Fantasia, etc"
-          ></Input>
+            placeholder="Ex: Ficção Científica, Romance, Fantasia"
+            defaultValue={initialData?.genre}
+          />
         </div>
+
         <div>
           <Label htmlFor="status">Status da Leitura</Label>
-          <Select name="status">
+          <Select name="status" defaultValue={initialData?.status}>
             <SelectTrigger id="status">
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>
@@ -137,10 +176,9 @@ export function BookForm() {
             placeholder="Suas anotações ou a sinopse do livro..."
           />
         </div>
-
         <SubmitButton />
 
-        {state.message && (
+        {state && state.message && (
           <p
             className={`text-md ${
               state.success ? 'text-green-600' : 'text-red-600'

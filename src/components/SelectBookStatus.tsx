@@ -9,18 +9,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { books } from '@/data/initialBooks'
 import { ReadStatus, ReadStatusLabel } from '@/types/book'
 import { useState } from 'react'
 
 interface SelectBookStatusProps {
   initialStatus?: ReadStatus
-  bookId: number
+  bookId: string
 }
 
 export function SelectBookStatus({
   initialStatus,
   bookId,
 }: SelectBookStatusProps) {
+  console.log(books)
+
   const [status, setStatus] = useState<ReadStatus | undefined>(initialStatus)
   const initialState: FormState = { message: '', success: false }
 

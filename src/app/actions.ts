@@ -15,6 +15,7 @@ export interface FormState {
 }
 
 const BookSchema = z.object({
+  id: z.string().optional(),
   title: z.string().min(1, 'Título é obrigatório'),
   author: z.string().min(1, 'Autor é obrigatório'),
   cover: z.string().url('Deve ser uma URL válida').optional().or(z.literal('')),
@@ -42,7 +43,7 @@ export async function addBook(
   }
 
   const newBook: Book = {
-    id: Date.now(),
+    id: Date.now().toString(),
     ...validatedFields.data,
   }
 
@@ -57,7 +58,7 @@ export async function addBook(
   }
 }
 
-export async function deleteBook(bookId: number) {
+export async function deleteBook(bookId: string) {
   const bookIndex = books.findIndex((book) => book.id === bookId)
 
   if (bookIndex !== -1) {
@@ -69,8 +70,55 @@ export async function deleteBook(bookId: number) {
   redirect('/library')
 }
 
+export async function updateBook(
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState> {
+  const validatedFields = BookSchema.safeParse(
+    Object.fromEntries(formData.entries())
+  )
+
+  if (!validatedFields.success) {
+    return {
+      message: `Falha na validação. Verifique os campos. ${validatedFields.error}`,
+      errors: validatedFields.error.flatten().fieldErrors,
+      success: false,
+    }
+  }
+
+  const { id, ...bookData } = validatedFields.data
+
+  if (!id) {
+    return {
+      message: 'ID do livro não foi encontrado para atualização.',
+      success: false,
+    }
+  }
+
+  const bookIndex = books.findIndex((book) => book.id === id)
+
+  if (bookIndex === -1) {
+    return { message: 'Livro não encontrado para atualizar.', success: false }
+  }
+
+  const oldBookData = books[bookIndex]
+  const newBook = { ...oldBookData, bookData }
+  books.splice(bookIndex, 1, newBook)
+
+  revalidatePath(`/library/${id}/edit`)
+  revalidatePath(`/library/${id}`)
+  revalidatePath('/library')
+  revalidatePath('/')
+
+  redirect(`/library/${id}`)
+
+  // return {
+  //   message: 'Sucesso ao atualizar o livro' + books.toString(),
+  //   success: true,
+  // }
+}
 export async function updateBookStatusById(
-  bookId: number,
+  bookId: string,
   newStatus: ReadStatus
 ) {
   const bookIndex = books.findIndex((b) => b.id === bookId)
