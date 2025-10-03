@@ -1,5 +1,5 @@
-import { books } from '@/data/initialBooks'
 import { BookForm } from '@/components/BookForm'
+import prisma from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 
 export default async function EditBookPage({
@@ -8,11 +8,15 @@ export default async function EditBookPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const bookToEdit = books.find((book) => book.id === id)
+  const bookToEdit = await prisma.book.findUnique({
+    where: {
+      id: +id,
+    },
+  })
 
-  //   if (!bookToEdit) {
-  //     notFound()
-  //   }
+  if (!bookToEdit) {
+    notFound()
+  }
 
   return (
     <main>

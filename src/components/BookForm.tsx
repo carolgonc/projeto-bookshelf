@@ -15,8 +15,9 @@ import {
 } from '@/components/ui/select'
 import { Textarea } from './ui/textarea'
 import Image from 'next/image'
-import { Book, ReadStatus, ReadStatusLabel } from '@/types/book'
+import { ReadStatus, ReadStatusLabel } from '@/types/book'
 import { toast } from 'sonner'
+import { Book } from 'db/generated/prisma'
 
 interface BookFormProps {
   initialData?: Book
@@ -33,10 +34,6 @@ function SubmitButton() {
 }
 
 export function BookForm({ initialData }: BookFormProps) {
-  // const initialState: FormState = { message: '', success: false }
-  // const [state, formAction] = useActionState(addBook, initialState)
-  // const formRef = useRef<HTMLFormElement>(null)
-  // const [coverPreview, setCoverPreview] = useState<string>('')
   const isEditMode = Boolean(initialData)
   const actionToUse = isEditMode ? updateBook : addBook
   const initialState: FormState = { message: '', success: false }
@@ -58,22 +55,7 @@ export function BookForm({ initialData }: BookFormProps) {
     }
   }, [state, isEditMode])
 
-  // useEffect(() => {
-  //   if (state.success) {
-  //     formRef.current?.reset()
-  //     setCoverPreview('')
-  //   }
-  // }, [state])
-
-  useEffect(() => {
-    if (state) {
-      if (state.success) {
-        toast.success(state.message)
-      } else if (state.errors) {
-        toast.error(state.message)
-      }
-    }
-  }, [state])
+  const currentYear = new Date().getFullYear()
 
   return (
     <form ref={formRef} action={formAction} className="space-y-6">
@@ -107,7 +89,7 @@ export function BookForm({ initialData }: BookFormProps) {
         <Input
           id="cover"
           name="cover"
-          defaultValue={initialData?.cover}
+          defaultValue={initialData?.cover || ''}
           onChange={(e) => setCoverPreview(e.target.value)}
         />
         {state && state.errors?.cover && (
@@ -134,13 +116,13 @@ export function BookForm({ initialData }: BookFormProps) {
             id="genre"
             name="genre"
             placeholder="Ex: Ficção Científica, Romance, Fantasia"
-            defaultValue={initialData?.genre}
+            defaultValue={initialData?.genre || ''}
           />
         </div>
 
         <div>
           <Label htmlFor="status">Status da Leitura</Label>
-          <Select name="status" defaultValue={initialData?.status}>
+          <Select name="status" defaultValue={initialData?.status || ''}>
             <SelectTrigger id="status">
               <SelectValue placeholder="Selecione um status" />
             </SelectTrigger>
@@ -155,7 +137,12 @@ export function BookForm({ initialData }: BookFormProps) {
         </div>
         <div>
           <Label htmlFor="pages">Total de páginas</Label>
-          <Input id="pages" name="pages" type="number" />
+          <Input
+            id="pages"
+            name="pages"
+            type="number"
+            defaultValue={initialData?.pages || 0}
+          />
         </div>
         <div>
           <Label htmlFor="rating">Avaliação</Label>
@@ -166,6 +153,19 @@ export function BookForm({ initialData }: BookFormProps) {
             min="0"
             max="5"
             step="1"
+            defaultValue={initialData?.rating || 0}
+          />
+        </div>
+        <div>
+          <Label htmlFor="rating">Ano de publicação</Label>
+          <Input
+            id="year"
+            name="year"
+            type="number"
+            min="0"
+            max={currentYear}
+            step="1"
+            defaultValue={initialData?.year || 0}
           />
         </div>
         <div>
@@ -174,6 +174,7 @@ export function BookForm({ initialData }: BookFormProps) {
             id="synopsis"
             name="synopsis"
             placeholder="Suas anotações ou a sinopse do livro..."
+            defaultValue={initialData?.synopsis || ''}
           />
         </div>
         <SubmitButton />
