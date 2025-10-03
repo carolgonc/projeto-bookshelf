@@ -1,12 +1,14 @@
 import Image from 'next/image'
-import { books } from '@/data/initialBooks'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Library, CheckCircle2, BookType } from 'lucide-react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { DynamicCalendar } from '@/components/DynamicCalendar'
+import prisma from '@/lib/prisma'
 
-export default function HomePage() {
+export default async function HomePage() {
+  const books = await prisma.book.findMany()
+
   const totalBooks = books.length
   const finishedBooks = books.filter((book) => book.status === 'LIDO').length
 

@@ -1,10 +1,11 @@
 'use server'
 
 import { z } from 'zod'
-import { books } from '@/data/initialBooks'
-import { Book, ReadStatus } from '@/types/book'
+import { ReadStatus } from '@/types/book'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { Book, Prisma } from 'db/generated/prisma'
+import prisma from '@/lib/prisma'
 
 export interface FormState {
   message: string
@@ -24,6 +25,7 @@ const BookSchema = z.object({
   pages: z.coerce.number().optional(),
   rating: z.coerce.number().min(0).max(5).optional(),
   synopsis: z.string().optional(),
+  year: z.coerce.number().optional(),
 })
 
 export async function addBook(
@@ -42,30 +44,27 @@ export async function addBook(
     }
   }
 
-  const newBook: Book = {
-    id: Date.now().toString(),
+  const newBook: Prisma.BookCreateInput = {
     ...validatedFields.data,
   }
 
-  books.push(newBook)
+  await prisma.book.create({ data: newBook })
 
   revalidatePath('/library')
   revalidatePath('/')
 
-  return {
-    message: `Livro "${newBook.title}" adicionado com sucesso!`,
-    success: true,
-  }
+  redirect('/library')
 }
 
-export async function deleteBook(bookId: string) {
-  const bookIndex = books.findIndex((book) => book.id === bookId)
-
-  if (bookIndex !== -1) {
-    books.splice(bookIndex, 1)
-  }
+export async function deleteBook(bookId: number) {
+  await prisma.book.delete({
+    where: {
+      id: bookId,
+    },
+  })
 
   revalidatePath('/library')
+  revalidatePath('/')
 
   redirect('/library')
 }
@@ -77,7 +76,6 @@ export async function updateBook(
   const validatedFields = BookSchema.safeParse(
     Object.fromEntries(formData.entries())
   )
-
   if (!validatedFields.success) {
     return {
       message: `Falha na validação. Verifique os campos. ${validatedFields.error}`,
@@ -85,9 +83,7 @@ export async function updateBook(
       success: false,
     }
   }
-
   const { id, ...bookData } = validatedFields.data
-
   if (!id) {
     return {
       message: 'ID do livro não foi encontrado para atualização.',
@@ -95,15 +91,12 @@ export async function updateBook(
     }
   }
 
-  const bookIndex = books.findIndex((book) => book.id === id)
-
-  if (bookIndex === -1) {
-    return { message: 'Livro não encontrado para atualizar.', success: false }
-  }
-
-  const oldBookData = books[bookIndex]
-  const newBook = { ...oldBookData, bookData }
-  books.splice(bookIndex, 1, newBook)
+  await prisma.book.update({
+    where: {
+      id: +id,
+    },
+    data: bookData,
+  })
 
   revalidatePath(`/library/${id}/edit`)
   revalidatePath(`/library/${id}`)
@@ -111,23 +104,21 @@ export async function updateBook(
   revalidatePath('/')
 
   redirect(`/library/${id}`)
-
-  // return
-  //   message: 'Sucesso ao atualizar o livro' + books.toString(),
-  //   success: true,
-  // }
 }
+
 export async function updateBookStatusById(
-  bookId: string,
+  bookId: number,
   newStatus: ReadStatus
 ) {
-  const bookIndex = books.findIndex((b) => b.id === bookId)
+  await prisma.book.update({
+    where: {
+      id: bookId,
+    },
+    data: {
+      status: newStatus,
+    },
+  })
 
-  if (bookIndex < 0) {
-    console.error('Livro não encontrado')
-  }
-
-  books[bookIndex].status = newStatus
-
-  redirect(`/library/${bookId}`)
+  revalidatePath(`/library/${bookId}`)
+  revalidatePath('/')
 }

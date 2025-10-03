@@ -1,0 +1,15 @@
+-- CreateTable
+CREATE TABLE "Book" (
+    "id" SERIAL NOT NULL,
+    "title" TEXT NOT NULL,
+    "author" TEXT NOT NULL,
+    "genre" TEXT,
+    "year" INTEGER,
+    "pages" INTEGER,
+    "rating" INTEGER,
+    "synopsis" TEXT,
+    "cover" TEXT,
+    "status" TEXT,
+
+    CONSTRAINT "Book_pkey" PRIMARY KEY ("id")
+);

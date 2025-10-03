@@ -3,8 +3,8 @@ import { SelectBookStatus } from '@/components/SelectBookStatus'
 import { StarRating } from '@/components/StarRating'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { books } from '@/data/initialBooks'
-import { ReadStatusLabel } from '@/types/book'
+import prisma from '@/lib/prisma'
+import { ReadStatus, ReadStatusLabel } from '@/types/book'
 import { Pencil } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,7 +15,11 @@ export default async function BookDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const book = books.find((b) => b.id === id)
+  const book = await prisma.book.findUnique({
+    where: {
+      id: +id,
+    },
+  })
 
   if (!book) {
     return (
@@ -38,7 +42,10 @@ export default async function BookDetailPage({
             />
           </div>
           <div className="flex gap-2 sm:flex-col">
-            <SelectBookStatus bookId={book.id} initialStatus={book.status} />
+            <SelectBookStatus
+              bookId={book.id}
+              initialStatus={book.status as ReadStatus}
+            />
             <Button asChild className="w-full">
               <Link href={`/library/${book.id}/edit`}>
                 <Pencil className="mr-2 h-4 w-4" />
@@ -62,7 +69,7 @@ export default async function BookDetailPage({
             <div>
               <h3 className="text-lg font-semibold">Status da Leitura</h3>
               <p className="text-muted-foreground">
-                {book.status && ReadStatusLabel[book.status]}
+                {book.status && ReadStatusLabel[book.status as ReadStatus]}
               </p>
             </div>
             <div>

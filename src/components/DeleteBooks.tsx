@@ -16,7 +16,7 @@ import {
 import { Trash } from 'lucide-react'
 
 interface DeleteBooksProps {
-  bookId: string
+  bookId: number
   bookTitle: string
 }
 
@@ -45,7 +45,7 @@ export function DeleteBooks({ bookId, bookTitle }: DeleteBooksProps) {
             Cancelar
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => deleteBook(bookId)}
+            onClick={handleDeleteBook}
             className="cursor-pointer"
           >
             Continuar

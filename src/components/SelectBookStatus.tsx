@@ -15,15 +15,13 @@ import { useState } from 'react'
 
 interface SelectBookStatusProps {
   initialStatus?: ReadStatus
-  bookId: string
+  bookId: number
 }
 
 export function SelectBookStatus({
   initialStatus,
   bookId,
 }: SelectBookStatusProps) {
-  console.log(books)
-
   const [status, setStatus] = useState<ReadStatus | undefined>(initialStatus)
   const initialState: FormState = { message: '', success: false }
 

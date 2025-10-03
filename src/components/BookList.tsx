@@ -1,20 +1,18 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { Book } from '@/types/book'
 import { Input } from './ui/input'
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from './ui/select'
 import { BookCard } from './BookCard'
 import { Button } from './ui/button'
 import Link from 'next/link'
+import { Prisma, Book } from 'db/generated/prisma'
 
 interface BookListProps {
   initialBooks: Book[]

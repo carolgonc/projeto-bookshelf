@@ -1,4 +1,3 @@
-import { Book } from '@/types/book'
 import {
   Card,
   CardContent,
@@ -12,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { StarRating } from '@/components/StarRating'
 import { ArrowRight, FilePenLine } from 'lucide-react'
+import { Book } from 'db/generated/prisma'
 
 export function BookCard({ book }: { book: Book }) {
   return (
