@@ -1,57 +1,26 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import Image from 'next/image'
-import Link from 'next/link'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { StarRating } from '@/components/StarRating'
-import { ArrowRight, FilePenLine } from 'lucide-react'
-import { Book } from 'db/generated/prisma'
+"use client";
+import Image from "next/image";
+import Link from "next/link";
+import { Book } from "@/types/book";
 
-export function BookCard({ book }: { book: Book }) {
+export default function BookCard({ book }: { book: Book }) {
   return (
-    <Card className="flex flex-col overflow-hidden h-full bg-white/20 backdrop-blur-lg border lg:p-6 border-white/30 shadow-lg">
-      <CardHeader className="w-full">
-        <Link href={`/library/${book.id}`}>
-          <div className="relative h-86 w-full">
-            <Image
-              src={book.cover || '/fallback.png'}
-              alt="{`Capa de ${book.title}`}"
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover"
-            />
-          </div>
-        </Link>
-      </CardHeader>
-      <CardContent className="flex flex-col">
-        <CardTitle className="text-base font-bold leading-tight">
-          {book.title}
-        </CardTitle>
-        <p className="text-sm text-muted-foreground">{book.author}</p>
-        <p className="text-sm text-muted-foreground">{book.year}</p>
-        <div className="flex flex-col py-4 gap-2">
-          <StarRating rating={book.rating} />
-          {book.genre && <Badge variant="default">{book.genre}</Badge>}
-        </div>
-      </CardContent>
-      <CardFooter className="flex gap-2 justify-end">
-        <Button asChild variant="default" size="icon" className="rounded-4xl">
-          <Link href={`/library/${book.id}/edit`}>
-            <FilePenLine className="h-5 w-5" />
-          </Link>
-        </Button>
-        <Button asChild variant="default" size="icon" className="rounded-4xl">
-          <Link href={`/library/${book.id}`}>
-            <ArrowRight />
-          </Link>
-        </Button>
-      </CardFooter>
-    </Card>
-  )
+    <div className="bg-card shadow-lg rounded-xl p-4 hover:shadow-xl transition">
+      <Image
+        src={book.cover}
+        alt={book.title}
+        width={200}
+        height={300}
+        className="rounded-md mx-auto"
+      />
+      <h2 className="text-xl font-semibold mt-2">{book.title}</h2>
+      <p className="text-sm text-muted-foreground">{book.author}</p>
+      <Link
+        href={`/library/${book.id}`}
+        className="text-blue-500 hover:underline mt-2 inline-block"
+      >
+        Ver detalhes
+      </Link>
+    </div>
+  );
 }

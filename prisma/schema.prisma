@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../db/generated/prisma"
 }
 
 datasource db {
@@ -15,14 +8,16 @@ datasource db {
 }
 
 model Book {
-  id       Int     @id @default(autoincrement())
-  title    String
-  author   String
-  genre    String?
-  year     Int?
-  pages    Int?
-  rating   Int?
-  synopsis String?
-  cover    String?
-  status   String?
+  id        String   @id @default(uuid())
+  title     String
+  author    String
+  year      Int
+  genre     String
+  cover     String
+  pages     Int
+  rating    Int?
+  status    String
+  synopsis  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

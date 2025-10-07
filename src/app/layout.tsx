@@ -1,40 +1,27 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
-import './globals.css'
-import { Header } from '@/components/layout/Header'
-import { Breadcrumbs } from '@/components/layout/BreadCrumbs'
-import { Toaster } from '@/components/ui/sonner'
+import "./globals.css";
+import { ThemeProvider } from "@/context/ThemeContext";
+import Navbar from "@/components/Navbar";
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-})
-
-export const metadata: Metadata = {
-  title: 'BookShelf',
-  description: 'Sua estante virtual',
-}
+export const metadata = {
+  title: "BookShelf",
+  description: "Biblioteca virtual com modo escuro e integração Prisma",
+};
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Header />
-        <Breadcrumbs />
-        {children}
-        <Toaster richColors />
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body>
+        <ThemeProvider>
+          <Navbar />
+          <main className="min-h-screen bg-background text-foreground transition-colors duration-300">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
-  )
+  );
 }
