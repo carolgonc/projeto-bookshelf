@@ -1,31 +1,29 @@
-import Image from "next/image";
-import { initialBooks } from "@/data/initialBooks";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Library, BookOpen, CheckCircle2, BookType } from "lucide-react";
-import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
-import { DynamicCalendar } from "@/components/DynamicCalendar";
+import Image from 'next/image'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Library, CheckCircle2, BookType } from 'lucide-react'
+import Link from 'next/link'
+import { Badge } from '@/components/ui/badge'
+import { DynamicCalendar } from '@/components/DynamicCalendar'
+import prisma from '@/lib/prisma'
 
-export default function HomePage() {
-  const totalBooks = initialBooks.length;
-  const finishedBooks = initialBooks.filter(
-    (book) => book.status === "LIDO"
-  ).length;
+export default async function HomePage() {
+  const books = await prisma.book.findMany()
 
-  const totalPagesRead = initialBooks.reduce((accumulator, book) => {
-    if (book.status === "LIDO" && book.pages) {
-      return accumulator + book.pages;
+  const totalBooks = books.length
+  const finishedBooks = books.filter((book) => book.status === 'LIDO').length
+
+  const totalPagesRead = books.reduce((accumulator, book) => {
+    if (book.status === 'LIDO' && book.pages) {
+      return accumulator + book.pages
     }
-    return accumulator;
-  }, 0);
+    return accumulator
+  }, 0)
 
-  const currentlyReading = initialBooks.filter(
-    (book) => book.status === "LENDO"
-  );
+  const currentlyReading = books.filter((book) => book.status === 'LENDO')
 
   const genres = [
-    ...new Set(initialBooks.map((book) => book.genre).filter(Boolean)),
-  ] as string[];
+    ...new Set(books.map((book) => book.genre).filter(Boolean)),
+  ] as string[]
 
   return (
     <main className="p-6 md:p-6">
@@ -49,7 +47,7 @@ export default function HomePage() {
                     className="flex items-center gap-4 p-2 rounded-lg hover:bg-muted"
                   >
                     <Image
-                      src={book.cover || "/fallback.png"}
+                      src={book.cover || '/fallback.png'}
                       alt={`Capa de ${book.title}`}
                       width={120}
                       height={140}
@@ -86,7 +84,7 @@ export default function HomePage() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {totalPagesRead.toLocaleString("pt-BR")}
+                  {totalPagesRead.toLocaleString('pt-BR')}
                 </div>
               </CardContent>
             </Card>
@@ -116,8 +114,8 @@ export default function HomePage() {
             {genres.map((genre) => (
               <Link href={`/library?genero=${genre}`} key={genre}>
                 <Badge
-                  variant="secondary"
-                  className="hover:bg-primary hover:text-primary-foreground"
+                  variant="default"
+                  className="hover:bg-secondary hover:text-secondary-foreground"
                 >
                   {genre}
                 </Badge>
@@ -127,5 +125,5 @@ export default function HomePage() {
         </Card>
       </div>
     </main>
-  );
+  )
 }

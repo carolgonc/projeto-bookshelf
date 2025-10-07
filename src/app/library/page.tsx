@@ -1,15 +1,15 @@
-import { initialBooks } from "@/data/initialBooks";
-import { BookCard } from "@/components/BookCard";
+import { BookList } from '@/components/BookList'
+import prisma from '@/lib/prisma'
 
-export default function LibraryPage() {
+export default async function LibraryPage() {
+  const books = await prisma.book.findMany()
+
   return (
-    <main className="container p-4 md:p-6">
-      <h1 className="text-3xl font-bold p-8">Minha Biblioteca</h1>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {initialBooks.map((book) => (
-          <BookCard key={book.id} book={book} />
-        ))}
+    <main>
+      <div className="flex flex-col gap-6 p-8">
+        <h1 className="text-3xl font-bold">Minha Biblioteca</h1>
+        <BookList initialBooks={books} />
       </div>
     </main>
-  );
+  )
 }

@@ -1,25 +1,26 @@
 "use client";
-import { Book } from "@/types";
 import Image from "next/image";
+import Link from "next/link";
+import { Book } from "@/types/book";
 
-interface Props {
-  book: Book;
-}
-
-export default function BookCard({ book }: Props) {
+export default function BookCard({ book }: { book: Book }) {
   return (
-    <div className="border rounded-md p-4 shadow-md dark:bg-gray-800 dark:text-white flex flex-col items-center">
+    <div className="bg-card shadow-lg rounded-xl p-4 hover:shadow-xl transition">
       <Image
-        src={book.image}
+        src={book.cover}
         alt={book.title}
-        width={150}
-        height={220}
-        className="mb-4 rounded"
+        width={200}
+        height={300}
+        className="rounded-md mx-auto"
       />
-      <h2 className="font-bold text-lg">{book.title}</h2>
-      <p>Autor: {book.author}</p>
-      <p>Gênero: {book.genre}</p>
-      <p>Ano: {book.year}</p>
+      <h2 className="text-xl font-semibold mt-2">{book.title}</h2>
+      <p className="text-sm text-muted-foreground">{book.author}</p>
+      <Link
+        href={`/library/${book.id}`}
+        className="text-blue-500 hover:underline mt-2 inline-block"
+      >
+        Ver detalhes
+      </Link>
     </div>
   );
 }
