@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
-import { getBooks, addBook } from "@/lib/books";
+import { initialBooks } from "@/data/initialBooks";
+
+let books = [...initialBooks];
 
 export async function GET() {
-  const books = getBooks();
   return NextResponse.json(books);
 }
 
-export async function POST(request: Request) {
-  const data = await request.json();
-  addBook(data);
-  return NextResponse.json({ message: "Book added!" });
+export async function POST(req: Request) {
+  const newBook = await req.json();
+  newBook.id = String(Date.now());
+  books.push(newBook);
+  return NextResponse.json(newBook, { status: 201 });
 }

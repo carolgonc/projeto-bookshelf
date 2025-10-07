@@ -1,21 +1,21 @@
 import { NextResponse } from "next/server";
-import { getBookById, updateBook, deleteBook } from "@/lib/books";
+import { initialBooks } from "@/data/initialBooks";
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const book = getBookById(params.id);
-  if (!book) return NextResponse.json({ message: "Book not found" }, { status: 404 });
+let books = [...initialBooks];
+
+export async function GET(_: Request, { params }: { params: { id: string } }) {
+  const book = books.find((b) => b.id === params.id);
+  if (!book) return NextResponse.json({ error: "Livro não encontrado" }, { status: 404 });
   return NextResponse.json(book);
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
-  const data = await request.json();
-  const updated = updateBook(params.id, data);
-  if (!updated) return NextResponse.json({ message: "Book not found" }, { status: 404 });
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
+  const updated = await req.json();
+  books = books.map((b) => (b.id === params.id ? { ...b, ...updated } : b));
   return NextResponse.json(updated);
 }
 
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
-  const deleted = deleteBook(params.id);
-  if (!deleted) return NextResponse.json({ message: "Book not found" }, { status: 404 });
-  return NextResponse.json({ message: "Book deleted" });
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+  books = books.filter((b) => b.id !== params.id);
+  return NextResponse.json({ message: "Livro removido com sucesso" });
 }
